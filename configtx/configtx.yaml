@@ -1,25 +1,25 @@
 Organizations:
-  - &OrdererOrgs
-    Name: OrdererOrgs
-    ID: OrdererMSP
-    MSPDir: ../organizations/ordererOrganizations/example.com/msp
-    Policies:
-      Readers:
-        Type: Signature
-        Rule: "OR('OrdererMSP.member')"
-      Writers:
-        Type: Signature
-        Rule: "OR('OrdererMSP.member')"
-      Admins:
-        Type: Signature
-        Rule: "OR('OrdererMSP.admin')"
-    OrdererEndpoints:
-      - orderer.example.com:7050
-  - &Org1
-    Name: Org1MSP
-    ID: Org1MSP
-    MSPDir: ../organization/peerOrganizations/or1.example.com/msp
-    Policies:
+    - &OrdererOrg
+        Name: OrdererOrg
+        ID: OrdererMSP
+        MSPDir: ../organizations/ordererOrganizations/example.com/msp
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('OrdererMSP.admin')"
+        OrdererEndpoints:
+            - orderer.example.com:7050
+    - &Org1
+        Name: Org1MSP
+        ID: Org1MSP
+        MSPDir: ../organizations/peerOrganizations/org1.example.com/msp
+        Policies:
             Readers:
                 Type: Signature
                 Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
@@ -32,15 +32,14 @@ Organizations:
             Endorsement:
                 Type: Signature
                 Rule: "OR('Org1MSP.peer')"
-    AnchorPeers:
-      - Host: peer0.org1.example.com
-        Port: 7051
-
-  - &Org2
-    Name: Org2MSP
-    ID: Org2MSP
-    MSPDir: ../organization/peerOrganizations/org2.example.com/msp
-    Policies:
+        AnchorPeers:
+          - Host: peer0.org1.example.com
+            Port: 7051
+    - &Org2
+        Name: Org2MSP
+        ID: Org2MSP
+        MSPDir: ../organizations/peerOrganizations/org2.example.com/msp
+        Policies:
             Readers:
                 Type: Signature
                 Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
@@ -53,9 +52,9 @@ Organizations:
             Endorsement:
                 Type: Signature
                 Rule: "OR('Org2MSP.peer')"
-    AnchorPeers:
-      - Host: peer0.org2.example.com
-        Port: 9051
+        AnchorPeers:
+          - Host: peer0.org2.example.com
+            Port: 9051
 
 Capabilities:
     Channel: &ChannelCapabilities
@@ -85,6 +84,7 @@ Application: &ApplicationDefaults
             Rule: "MAJORITY Endorsement"
     Capabilities:
         <<: *ApplicationCapabilities
+
 Orderer: &OrdererDefaults
     OrdererType: etcdraft
     Addresses:
@@ -114,6 +114,7 @@ Orderer: &OrdererDefaults
         BlockValidation:
             Type: ImplicitMeta
             Rule: "ANY Writers"
+
 Channel: &ChannelDefaults
     Policies:
         Readers:
@@ -128,6 +129,7 @@ Channel: &ChannelDefaults
 
     Capabilities:
         <<: *ChannelCapabilities
+
 Profiles:
     TwoOrgsOrdererGenesis:
         <<: *ChannelDefaults
