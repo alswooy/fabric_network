@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'tta.blockchain'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    // ✅ 수정됨: 존재하는 버전인 2.4.1로 변경 (2.2.4는 Maven Central에 없음)
+    // Fabric 2.2.x 피어(Peer) 환경에서도 2.4.x Shim은 정상 작동합니다.
+    implementation 'org.hyperledger.fabric-chaincode-java:fabric-chaincode-shim:2.2.3'
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+shadowJar {
+    archiveBaseName.set('ttaChainCode')
+    archiveVersion.set('1.0.0')
+    archiveClassifier.set('')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 11
+}
+
+tasks.named('shadowJar') {
+    archiveBaseName.set('ttaChainCode')
+    archiveVersion.set('1.0.0')
+    archiveClassifier.set('')
+}
+
+test {
+    useJUnitPlatform()
+}
